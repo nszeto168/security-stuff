@@ -1,2 +1,3 @@
 This is my README file
-Total git newb
+
+This repo has some random bits of code im working on
