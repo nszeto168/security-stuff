@@ -13,12 +13,11 @@ def can_connect(host_port_pair, timeout = 0.200):
         return False
 
 
-def scan(first_port, last_port, host):
-    port_list = []
-    for port in range(int(first_port), int(last_port)):
-        if can_connect((socket.gethostbyname(host), port)):  # if you can connect add it to the list
+def scan(first_port, last_port, ip_address):
+    port_list = [] # we will store the port numbers in here
+    for port in range(int(first_port), int(last_port) +1 ):
+        if can_connect((ip_address, port)):  # if you can connect add it to the list
             port_list.append(port)
     return port_list  # returns a list of ports
 
 
-#print(scan(1, 1000, 'google.com'))

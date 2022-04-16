@@ -2,7 +2,7 @@
 # Welcome to my incredible port scanner!
 import sys, getopt
 import full_connect_scan
-
+from socket import gethostbyname
 argument_list = sys.argv[1:]  # Collects the flag
 
 options = "hfm :"
@@ -43,10 +43,14 @@ try:
             fport = input("Enter the first port you want to scan (will scan in a range): ")
             lport = input("Enter the last port you want to scan (will scan in a range): ")
             print("Performing a full connect scan")
+            target = gethostbyname(target) # retrieves the hostname of the target
             results = full_connect_scan.scan(fport, lport, target)
             for port in results:
                 # print out all the open ports
                 print(f"Port {port} is open for business!")
+        # if currentArgument in ("-s", "--stealth"):
+            #  performs a syn scan
+
 
 except getopt.GetoptError:
     print("Use the -h or --help for help")
