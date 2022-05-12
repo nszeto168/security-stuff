@@ -1,11 +1,9 @@
-import scapy.all
-import random
-source_port = random.randint(1,65500)
-packet = scapy.all.IP( dst='8.8.8.8')/scapy.all.TCP(sport= source_port, dport=53, flags="S")
-# reset =scapy.all.IP( dst='8.8.8.8')/scapy.all.TCP(sport=source_port, dport=[53, 52], flags="R")
-ans = scapy.all.sr1(packet, timeout=0.2, verbose=False)
+import optparse
 
-if ans == None:
-    print("Port not closed!")
-else:
-    print("Port is open")
+parser = optparse.OptionParser('stuff here')
+parser.add_option('-p', action='store', dest='port_tuple')
+options = parser.parse_args()
+
+
+# print(f"arguments: {options.port_tuple}")
+print(f"options: {options}")

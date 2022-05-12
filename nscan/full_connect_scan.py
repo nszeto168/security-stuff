@@ -1,23 +1,31 @@
 import socket
+from threading import Thread
+from scan import Scan
+
+class FullConnect(Scan):
+    def connect(self, host_port_pair):
+        # Takes in a (host, port) tuple
+        try:
+            socket.create_connection(host_port_pair, self.timeout)
+            host, port = host_port_pair
+            self.open_ports.append(port)  # append ports to the port list
+        except TimeoutError:
+            pass
+        except socket.timeout:
+            pass
+        finally:
+            self.connection_lock.release()  # Release the thread
+
+    def run(self):
+        for port in range(int(self.first_port), int(self.last_port) + 2):
+            self.connection_lock.acquire() # Get a lock for a thread
+            t = Thread(target=self.connect, args=((self.host, port),))
+            t.start()
+            # self.connect((self.host, port))
+
+        return self.open_ports
 
 
-def can_connect(host_port_pair, timeout = 0.200):
-    # Returns True when can connect. Returns False when it cannot connect
-    try:
-        socket.create_connection(host_port_pair, timeout)  # 200 ms timeout
-        # makes the connection given a host and port
-        # There has to be a way to continue sending traffic while waiting on other packets to timeout
-        # right now it takes 3 min 20 sec to do a scan of 1000 ports
-        return True
-    except TimeoutError:
-        return False
-
-
-def scan(first_port, last_port, ip_address):
-    port_list = [] # we will store the port numbers in here
-    for port in range(int(first_port), int(last_port) +1 ):
-        if can_connect((ip_address, port)):  # if you can connect add it to the list
-            port_list.append(port)
-    return port_list  # returns a list of ports
-
+fc = FullConnect(53, 443, '8.8.8.8')
+print(fc.run())
 
