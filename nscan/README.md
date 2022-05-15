@@ -9,3 +9,4 @@ python main.py <host> -f
 
 xmas scan and syn scan have not been implemented, but they would have -x and -s
 
+By default, this program will scan TCP ports 1-1000 w/ 10 threads, the scan will take approximately 25 seconds.

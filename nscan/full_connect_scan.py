@@ -8,7 +8,8 @@ class FullConnect(Scan):
     def connect(self, host_port_pair):
         # Takes in a (host, port) tuple
         try:
-            socket.create_connection(host_port_pair, self.timeout)
+            s = socket.create_connection(host_port_pair, self.timeout)
+            s.close()
             host, port = host_port_pair
             self.open_ports.append(port)  # append ports to the port list
         except TimeoutError:
