@@ -11,14 +11,11 @@ def can_connect(ip_address, port, timeout_time = 0.200):
         return True
 
 
-def scan(ip_address, first_port,last_port):
+def scan(first_port,last_port, ip_address):
     # This sends a syn packet and returns false if there is no response
+    # This solution does not work against my home router
     #return [port for port in range (int(first_port), int(last_port) + 1 if can_connect(ip_address, port)]
-    port_list = []
     for port in range (int(first_port), int(last_port)+1):
         if can_connect(ip_address, port):
-            port_list.append(port)
-    return port_list
-
-
-print(scan("172.217.14.110", 80, 443))
+            self.port_list.append(port)
+    return self.port_list

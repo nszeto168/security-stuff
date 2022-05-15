@@ -1,6 +1,8 @@
 import socket
 from threading import Thread
 from scan import Scan
+from time import sleep
+
 
 class FullConnect(Scan):
     def connect(self, host_port_pair):
@@ -22,10 +24,5 @@ class FullConnect(Scan):
             t = Thread(target=self.connect, args=((self.host, port),))
             t.start()
             # self.connect((self.host, port))
-
+        sleep(self.timeout)  # Allow time for the scans to catch up.
         return self.open_ports
-
-
-fc = FullConnect(53, 443, '8.8.8.8')
-print(fc.run())
-
