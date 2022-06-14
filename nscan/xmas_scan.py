@@ -1,20 +1,22 @@
+from scapy.layers.inet import IP, TCP, sr1
+import random
+from scan import Scan
+#f This is very similar to the syn scan in fact I basically copy+pasted it all
 
 
-# This is very similar to the syn scan.
-#
-def can_connect(ip_address, port, timeout_time = 0.200):
-    source_port = random.randint(1, 65500) # random source port
-    packet = scapy.all.IP(dst=ip_address) / scapy.all.TCP(sport=source_port, dport=port, flags="FPU") # make packet
-    ans = scapy.all.sr1(packet, timeout=timeout_time, verbose=False) # send packet
-    if ans == None: # if there was no response, return false
-        return False
-    else:
-        return True
-
-def scan(first_port,last_port, ip_address):
-    #return [port for port in range (int(first_port), int(last_port) + 1 if can_connect(ip_address, port)]
-    port_list = []
-    for port in range (int(first_port), int(last_port)+1):
-        if can_connect(ip_address, port):
-            port_list.append(port)
-    return port_list
+class Xmas(Scan):
+    def connect(self, port):
+        source_port = random.randint(49152, 65500)  # ephemeral source port in compliance with RFC 6335
+        packet = IP(dst=self.host_resolved) / TCP(sport=source_port, dport=port, flags="FPU")  # make packet
+        ans = sr1(packet, timeout=self.timeout, verbose=False)  # send packet
+        if ans is None:
+            # stop if there is no answer
+            self.connection_lock.release()  # Release the thread
+            return
+        ans.lastlayer()
+        ans_flag = ans['TCP'].flags  # extract the tcp flag
+        if ans_flag == 'R' or 'RA':
+            pass
+        else:
+            print(f'[+] Port{port} is open or being filtered.')
+        self.connection_lock.release()  # Release the thread

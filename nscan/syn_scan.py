@@ -1,21 +1,26 @@
-import scapy.all
+from scapy.layers.inet import IP, TCP, sr1
+# scapy.all has some issues with pycharm so i used scapy.layers.inet
+# REFERENCE: https://stackoverflow.com/questions/45691654/pycharm-unresolved-reference-with-scapy
 import random
-
-def can_connect(ip_address, port, timeout_time = 0.200):
-    source_port = random.randint(1, 65500) # random source port
-    packet = scapy.all.IP(dst=ip_address) / scapy.all.TCP(sport=source_port, dport=port, flags="S") # make packet
-    ans = scapy.all.sr1(packet, timeout=timeout_time, verbose=False) # send packet
-    if ans == None: # if there was no response, return false
-        return False
-    else:
-        return True
+from scan import Scan
 
 
-def scan(first_port,last_port, ip_address):
-    # This sends a syn packet and returns false if there is no response
-    # This solution does not work against my home router
-    #return [port for port in range (int(first_port), int(last_port) + 1 if can_connect(ip_address, port)]
-    for port in range (int(first_port), int(last_port)+1):
-        if can_connect(ip_address, port):
-            self.port_list.append(port)
-    return self.port_list
+class Syn(Scan):
+    def connect(self, port):
+        source_port = random.randint(49152, 65500)  # ephemeral source port in compliance with RFC 6335
+        packet = IP(dst=self.host_resolved) / TCP(sport=source_port, dport=port, flags="S")  # make packet
+        ans = sr1(packet, timeout=self.timeout, verbose=False)  # send packet
+        if ans is None:
+            self.connection_lock.release()
+            return
+        ans.lastlayer()
+        ans_flag = ans['TCP'].flags  # extract the tcp flag
+        if ans_flag == 'SA':
+            print(f'[+] port {port} is open for business')
+            reset = IP(dst=self.host_resolved) / TCP(sport=source_port, dport=port, flags="R")
+            # Send a reset packet
+            sr1(reset,timeout=self.timeout, verbose=False)
+        elif ans_flag == 'R':
+            # sometimes they will respond with reset
+            print(f'[+] port {port} is open for business')
+        self.connection_lock.release()
