@@ -6,13 +6,13 @@ when they were less evil, "Don't be evil".
 Run this tool by running main.py:
 
 Full connect scan:
-python main.py <host> -f
+python main.py {target} -f
 
 SYN scan:
-sudo python main.py <host> -s
+sudo python main.py {target} -s
 
 X-mas scan:
-sudo python main.py <host> -x
+sudo python main.py {target} -x
 
 The SYN scan and X-mas scan need root permissions because you are crafting packets.
 By default, this program will scan TCP ports 1-1000 w/ 10 threads, the scan will take approximately 25 seconds.
