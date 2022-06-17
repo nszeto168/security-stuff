@@ -14,6 +14,8 @@ sudo python main.py {target} -s
 X-mas scan:
 sudo python main.py {target} -x
 
+
+{target} is either a hostname or an IP address
 The SYN scan and X-mas scan need root permissions because you are crafting packets.
 By default, this program will scan TCP ports 1-1000 w/ 10 threads, the scan will take approximately 25 seconds.
 

@@ -16,11 +16,11 @@ class Syn(Scan):
         ans.lastlayer()
         ans_flag = ans['TCP'].flags  # extract the tcp flag
         if ans_flag == 'SA':
-            print(f'[+] port {port} is open for business')
+            self.open_ports.append(port)
             reset = IP(dst=self.host_resolved) / TCP(sport=source_port, dport=port, flags="R")
             # Send a reset packet
             sr1(reset,timeout=self.timeout, verbose=False)
         elif ans_flag == 'R':
             # sometimes they will respond with reset
-            print(f'[+] port {port} is open for business')
+            self.open_ports.append(port)
         self.connection_lock.release()

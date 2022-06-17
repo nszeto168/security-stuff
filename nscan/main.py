@@ -2,7 +2,7 @@ import optparse  # parse options
 from full_connect_scan import FullConnect
 from syn_scan import Syn
 from xmas_scan import Xmas
-from findRange import findRange
+from find_range import findRange
 parser = optparse.OptionParser('usage %prog <host> -p <first-port>-<last-port> -[f|s|x]')
 parser.add_option('-p', dest='port_range', help='specify a range of ports or one port (default=1-1000)', default='1-1000')
 parser.add_option('-t', dest='timeout', help='time in seconds that the host considers the target port unreachable (default=0.250)',
@@ -32,8 +32,10 @@ elif s_scan:
     for host in hosts:
         s = Syn(port_range, host, timeout, threads)
         s.run()
+        print(s)  # print the tostring
 elif x_scan:
     for host in hosts:
         x = Xmas(port_range, host, timeout, threads)
         x.run()
+        print(x)
 

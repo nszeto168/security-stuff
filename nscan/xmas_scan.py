@@ -18,5 +18,5 @@ class Xmas(Scan):
         if ans_flag == 'R' or 'RA':
             pass
         else:
-            print(f'[+] Port{port} is open or being filtered.')
+            self.open_ports.append(port)
         self.connection_lock.release()  # Release the thread

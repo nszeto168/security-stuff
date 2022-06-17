@@ -20,7 +20,7 @@ class Scan():
         # ToString for all Scan objects
         string = ''
         for port in self.open_ports:
-            string += f"[+] port {port} is open and unfiltered\n"
+            string += f"[+] port {port} is open\n"
         return string
 
     def connect(self, **kwargs):
